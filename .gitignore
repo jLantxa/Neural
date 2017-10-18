@@ -1,3 +1,6 @@
 # IntelliJ Idea
 .idea/
 Neural.iml
+
+out/
+doc/javadoc/
