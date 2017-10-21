@@ -14,24 +14,7 @@
  * limitations under the License.
 */
 
-package org.jlantxa.neural.behaviour;
+package org.jlantxa.neural;
 
-/**
- * The identity function outputs exactly its input when evaluated. Its derivative is therefore 0.
- */
-public class IdentityFunction implements Behaviour
-{
-    public IdentityFunction() {
-    }
-
-
-    @Override
-    public double activation(double x) {
-        return x;
-    }
-
-    @Override
-    public double derivative(double x) {
-        return 1.0;
-    }
+public class NeuralNetwork {
 }
