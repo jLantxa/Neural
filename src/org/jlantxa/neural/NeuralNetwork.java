@@ -31,15 +31,16 @@ public class NeuralNetwork
     }
 
 
-    public boolean addLayer(Layer layer, double[][] connections) {
-        if (layer == null) {
+    public boolean addLayer(double[] biases, Behaviour behaviour, double[][] connections) {
+        if (biases == null || behaviour == null) {
             return false;
         }
 
-        int layerSize = layer.getSize();
-        if (layerSize <= 0) {
+        if (biases.length <= 0) {
             return false;
         }
+
+        Layer layer = new Layer(biases, behaviour);
 
         // Is this the first layer?
         if (mLayers.size() <= 0) {
@@ -58,7 +59,7 @@ public class NeuralNetwork
 
             // Connection matrix has wrong dimensions?
             int netSize = mLayers.size();
-            if (layerSize != kSize || hSize != mLayers.get(netSize - 1).getSize()) {
+            if (layer.getSize() != kSize || hSize != mLayers.get(netSize - 1).getSize()) {
                 return false;
             }
 
@@ -79,15 +80,19 @@ public class NeuralNetwork
         int h = k - 1;
 
         // Check index bounds
-        if (h <= 0) return; // Input layer or previous
-        if (k >= mLayers.size()) return;    // Beyond output layer
+        if (h < 0) return;
+        if (k >= mLayers.size()) return;
 
         double[] hOutput = mLayers.get(h).output;
         Layer layer_k = mLayers.get(k);
 
         int size_h = mLayers.get(h).getSize();
         int size_k = layer_k.getSize();
-        double[][] connection = mConnections.get(k);
+
+        /* The connection matrix is associated with hidden and output layers.
+         * Therefore, the connection matrix before layer k has index k-1, i.e. h.
+         */
+        double[][] connection = mConnections.get(h);
         double[] k_input = new double[size_k];
 
         // Weighted sum
@@ -125,6 +130,10 @@ public class NeuralNetwork
         return mLayers.get(mLayers.size() - 1).getOutput();
     }
 
+    public int getSize() {
+        return mLayers.size();
+    }
+
 
     /**
      * A layer is a collection of neurons of equal behaviour each of them equally distant from the input layer.
@@ -136,14 +145,6 @@ public class NeuralNetwork
         private double[] bias;
         private double[] output;
 
-
-        public Layer(int size, Behaviour behaviour) {
-            this.size = size;
-            this.behaviour = behaviour;
-
-            this.bias = new double[size];
-            this.output = new double[size];
-        }
 
         public Layer(double[] biases, Behaviour behaviour) {
             this.size = biases.length;
