@@ -26,9 +26,48 @@ public class NeuralNetwork
     private ArrayList<double[][]> mConnections;
 
     public NeuralNetwork() {
-
+        mLayers = new ArrayList<>();
+        mConnections = new ArrayList<>();
     }
 
+
+    public boolean addLayer(Layer layer, double[][] connections) {
+        if (layer == null) {
+            return false;
+        }
+
+        int layerSize = layer.getSize();
+        if (layerSize <= 0) {
+            return false;
+        }
+
+        // Is this the first layer?
+        if (mLayers.size() <= 0) {
+            // Add layer, don't mind the connections
+            mLayers.add(layer);
+            return true;
+        }
+        // or a hidden / output layer?
+        else {
+            if (connections == null) {
+                return false;
+            }
+
+            int hSize = connections.length;
+            int kSize = connections[0].length;
+
+            // Connection matrix has wrong dimensions?
+            int netSize = mLayers.size();
+            if (layerSize != kSize || hSize != mLayers.get(netSize - 1).getSize()) {
+                return false;
+            }
+
+            // Add layer and connections
+            mLayers.add(layer);
+            mConnections.add(connections);
+            return true;
+        }
+    }
 
     /**
      * Propagate output of layer k-1 through layer k
