@@ -31,13 +31,14 @@ public class NeuralNetwork
     }
 
 
-    public boolean addLayer(double[] biases, Behaviour behaviour, double[][] connections) {
+    public void addLayer(double[] biases, Behaviour behaviour, double[][] connections) throws TopologyException
+    {
         if (biases == null || behaviour == null) {
-            return false;
+            throw new TopologyException("Bias and/or behaviour objects are null.");
         }
 
         if (biases.length <= 0) {
-            return false;
+            throw new TopologyException("Bias vector is empty.");
         }
 
         Layer layer = new Layer(biases, behaviour);
@@ -46,12 +47,11 @@ public class NeuralNetwork
         if (mLayers.size() <= 0) {
             // Add layer, don't mind the connections
             mLayers.add(layer);
-            return true;
         }
         // or a hidden / output layer?
         else {
             if (connections == null) {
-                return false;
+                throw new TopologyException("The connection matrix is null.");
             }
 
             int hSize = connections.length;
@@ -60,13 +60,15 @@ public class NeuralNetwork
             // Connection matrix has wrong dimensions?
             int netSize = mLayers.size();
             if (layer.getSize() != kSize || hSize != mLayers.get(netSize - 1).getSize()) {
-                return false;
+                throw new TopologyException("The dimensions of the connection matrix " +
+                        "do not match the net's topology.\n" +
+                        "Lhk = (" + layer.getSize() + ", " + mLayers.get(netSize - 1).getSize() + "), " +
+                        "hk = (" + hSize + ", " + kSize + ")");
             }
 
             // Add layer and connections
             mLayers.add(layer);
             mConnections.add(connections);
-            return true;
         }
     }
 
