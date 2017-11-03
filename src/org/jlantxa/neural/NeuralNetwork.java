@@ -22,7 +22,16 @@ import java.util.ArrayList;
 
 public class NeuralNetwork
 {
+    /**
+     * Layers, including input, hidden and output
+     */
     private ArrayList<Layer> mLayers;
+
+    /**
+     * Connection matrices
+     * The connection matrix is associated with hidden and output layers.
+     * Therefore, the connection matrix before layer k has index k-1, i.e. h.
+     */
     private ArrayList<double[][]> mConnections;
 
     public NeuralNetwork() {
@@ -30,7 +39,14 @@ public class NeuralNetwork
         mConnections = new ArrayList<>();
     }
 
-
+    /**
+     * Add a layer, including connection matrix and activation function
+     * @param biases vector of biases
+     * @param behaviour activation function
+     * @param connections connection matrix
+     * @throws TopologyException Throws TopologyException when the new layer does not match with
+     * the previous layer and/or connection matrix.
+     */
     public void addLayer(double[] biases, Behaviour behaviour, double[][] connections) throws TopologyException
     {
         if (biases == null || behaviour == null) {
@@ -59,10 +75,10 @@ public class NeuralNetwork
 
             // Connection matrix has wrong dimensions?
             int netSize = mLayers.size();
-            if (layer.getSize() != kSize || hSize != mLayers.get(netSize - 1).getSize()) {
+            if (layer.size != kSize || hSize != mLayers.get(netSize - 1).size) {
                 throw new TopologyException("The dimensions of the connection matrix " +
                         "do not match the net's topology.\n" +
-                        "Lhk = (" + layer.getSize() + ", " + mLayers.get(netSize - 1).getSize() + "), " +
+                        "Lhk = (" + layer.size + ", " + mLayers.get(netSize - 1).size + "), " +
                         "hk = (" + hSize + ", " + kSize + ")");
             }
 
@@ -88,8 +104,8 @@ public class NeuralNetwork
         double[] hOutput = mLayers.get(h).output;
         Layer layer_k = mLayers.get(k);
 
-        int size_h = mLayers.get(h).getSize();
-        int size_k = layer_k.getSize();
+        int size_h = mLayers.get(h).size;
+        int size_k = layer_k.size;
 
         /* The connection matrix is associated with hidden and output layers.
          * Therefore, the connection matrix before layer k has index k-1, i.e. h.
@@ -129,7 +145,7 @@ public class NeuralNetwork
      * @return output vector
      */
     public double[] getOutput() {
-        return mLayers.get(mLayers.size() - 1).getOutput();
+        return mLayers.get(mLayers.size() - 1).output;
     }
 
     public int getSize() {
@@ -144,8 +160,8 @@ public class NeuralNetwork
     {
         private int size;
         private Behaviour behaviour;
-        private double[] bias;
-        private double[] output;
+        private double [] bias;
+        private double [] output;
 
 
         public Layer(double[] biases, Behaviour behaviour) {
