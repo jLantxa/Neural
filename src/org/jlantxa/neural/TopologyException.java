@@ -18,7 +18,7 @@ package org.jlantxa.neural;
 
 public class TopologyException extends Exception
 {
-    private String msg;
+    private final String msg;
 
     public TopologyException(String msg) {
         this.msg = msg;

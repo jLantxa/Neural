@@ -52,7 +52,6 @@ public class NetPerformanceTest
 
                 if (l == 0) {
                     net.addLayer(biases, new IdentityFunction(), null);
-                    continue;
                 } else {
                     double[][] connections = new double[layers[l - 1]][layers[l]];
 
@@ -87,8 +86,8 @@ public class NetPerformanceTest
             }
 
             long executeAvg = 0;
-            for (int i = 0; i < execute.size(); i++) {
-                executeAvg += execute.get(i);
+            for (Long anExecute : execute) {
+                executeAvg += anExecute;
             }
             executeAvg /= execute.size();
             double throughput = 1 / (executeAvg/1000000000.0);
@@ -96,7 +95,6 @@ public class NetPerformanceTest
 
         } catch (TopologyException te) {
             te.printStackTrace();
-            return;
         }
     }
 

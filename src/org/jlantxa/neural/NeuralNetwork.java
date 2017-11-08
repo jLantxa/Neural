@@ -25,14 +25,14 @@ public class NeuralNetwork
     /**
      * Layers, including input, hidden and output
      */
-    private ArrayList<Layer> mLayers;
+    private final ArrayList<Layer> mLayers;
 
     /**
      * Connection matrices
      * The connection matrix is associated with hidden and output layers.
      * Therefore, the connection matrix before layer k has index k-1, i.e. h.
      */
-    private ArrayList<double[][]> mConnections;
+    private final ArrayList<double[][]> mConnections;
 
     public NeuralNetwork() {
         mLayers = new ArrayList<>();
@@ -158,10 +158,10 @@ public class NeuralNetwork
      */
     private class Layer
     {
-        private int size;
-        private Behaviour behaviour;
-        private double [] bias;
-        private double [] output;
+        private final int size;
+        private final Behaviour behaviour;
+        private final double [] bias;
+        private final double [] output;
 
 
         public Layer(double[] biases, Behaviour behaviour) {
