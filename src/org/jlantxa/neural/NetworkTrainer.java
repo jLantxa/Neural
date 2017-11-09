@@ -18,5 +18,13 @@ package org.jlantxa.neural;
 
 public class NetworkTrainer
 {
+    private NeuralNetwork mNetwork;
 
+    public NetworkTrainer(NeuralNetwork network) {
+        mNetwork = network;
+    }
+
+    public NeuralNetwork getNetwork() {
+        return mNetwork;
+    }
 }
