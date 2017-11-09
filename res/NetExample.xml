@@ -1,0 +1,30 @@
+<?xml version = "1.0"?>
+<NeuralNetwork>
+    <Layer name="layer0" behaviour="identity">
+        <Neuron>0.0</Neuron>
+        <Neuron>0.0</Neuron>
+        <Neuron>0.0</Neuron>
+    </Layer>
+
+    <Layer name="layer1" behaviour="logistic">
+        <Neuron>0.0</Neuron>
+        <Neuron>0.0</Neuron>
+    </Layer>
+
+    <Connection layer="layer0">
+        <Node>
+            <Weight>1.0</Weight>
+            <Weight>1.0</Weight>
+        </Node>
+
+        <Node>
+            <Weight>1.0</Weight>
+            <Weight>1.0</Weight>
+        </Node>
+
+        <Node>
+            <Weight>1.0</Weight>
+            <Weight>1.0</Weight>
+        </Node>
+    </Connection>
+</NeuralNetwork>

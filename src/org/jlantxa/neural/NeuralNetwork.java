@@ -17,6 +17,8 @@
 package org.jlantxa.neural;
 
 import org.jlantxa.neural.behaviour.Behaviour;
+import org.jlantxa.neural.behaviour.IdentityFunction;
+import org.jlantxa.neural.behaviour.LogisticFunction;
 
 import java.util.ArrayList;
 
@@ -48,11 +50,28 @@ public class NeuralNetwork
      * NeuralNerwork object containing the topology described by the networkDescriptor.
      * @param networkDescriptor NetworkDescriptor object
      */
-    private NeuralNetwork(NetworkDescriptor networkDescriptor) {
+    public NeuralNetwork(NetworkDescriptor networkDescriptor) {
         mLayers = new ArrayList<>();
-        mConnections = new ArrayList<>();
 
-        // TODO: Create Layers according to the NetworkDesciptor.
+        ArrayList<NetworkDescriptor.LayerDescriptor> layerDescriptors = networkDescriptor.getLayerDescriptors();
+        mConnections = networkDescriptor.getConnectionDescriptors();
+
+        for (NetworkDescriptor.LayerDescriptor layerDescriptor : layerDescriptors) {
+            double[] biases = layerDescriptor.biases;
+
+            Behaviour behaviour;
+            switch (layerDescriptor.behaviourType) {
+                case IDENTITY:
+                    behaviour = new IdentityFunction();
+                    break;
+
+                case LOGISTIC:
+                default:
+                    behaviour = new LogisticFunction();
+            }
+
+            mLayers.add(new Layer(biases, behaviour));
+        }
     }
 
     /**
@@ -63,7 +82,7 @@ public class NeuralNetwork
      * @throws TopologyException Throws TopologyException when the new layer does not match with
      * the previous layer and/or connection matrix.
      */
-    public void addLayer(double[] biases, Behaviour behaviour, double[][] connections) throws TopologyException
+    void addLayer(double[] biases, Behaviour behaviour, double[][] connections) throws TopologyException
     {
         if (biases == null || behaviour == null) {
             throw new TopologyException("Bias and/or behaviour objects are null.");

@@ -16,10 +16,9 @@
 
 package org.jlantxa.neural.test;
 
+import org.jlantxa.neural.NetworkDescriptor;
 import org.jlantxa.neural.NeuralNetwork;
 import org.jlantxa.neural.TopologyException;
-import org.jlantxa.neural.behaviour.IdentityFunction;
-import org.jlantxa.neural.behaviour.LogisticFunction;
 
 import java.util.ArrayList;
 
@@ -43,7 +42,7 @@ public class NetPerformanceTest
 
         try {
             nanoTimer = System.nanoTime();
-            NeuralNetwork net = new NeuralNetwork();
+            NetworkDescriptor netDescriptor = new NetworkDescriptor();
             for (int l = 0; l < layers.length; l++) {
                 double[] biases = new double[layers[l]];
 
@@ -53,7 +52,7 @@ public class NetPerformanceTest
 
 
                 if (l == 0) {
-                    net.addLayer(biases, new IdentityFunction(), null);
+                    netDescriptor.addLayer(biases, NetworkDescriptor.BehaviourType.IDENTITY, null);
                 } else {
                     double[][] connections = new double[layers[l - 1]][layers[l]];
 
@@ -63,9 +62,11 @@ public class NetPerformanceTest
                         }
                     }
 
-                    net.addLayer(biases, new LogisticFunction(), connections);
+                    netDescriptor.addLayer(biases, NetworkDescriptor.BehaviourType.LOGISTIC, connections);
                 }
             }
+
+            NeuralNetwork net = new NeuralNetwork(netDescriptor);
 
             createNanos = System.nanoTime() - nanoTimer;
             System.out.println("Create [ns] = " + createNanos);
