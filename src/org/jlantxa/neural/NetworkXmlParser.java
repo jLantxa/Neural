@@ -16,17 +16,16 @@
 
 package org.jlantxa.neural;
 
-public class TopologyException extends Exception
-{
-    private final String msg;
+import java.io.File;
 
-    TopologyException(String msg) {
-        this.msg = msg;
+public class NetworkXmlParser
+{
+    private NetworkXmlParser() {
+
     }
 
-    @Override
-    public void printStackTrace() {
-        System.err.println("Topology exception:");
-        System.err.println(msg);
+    public static NetworkDescriptor parseXML(File xmlFile) {
+        // TODO: Parse xml and create descriptor.
+        return null;
     }
 }

@@ -34,9 +34,25 @@ public class NeuralNetwork
      */
     private final ArrayList<double[][]> mConnections;
 
+    /**
+     * Empty Neural Network constuctor. This creates an empty Neural Network and
+     * initialises its internal Lists. Layers must be added after construction.
+     */
     public NeuralNetwork() {
         mLayers = new ArrayList<>();
         mConnections = new ArrayList<>();
+    }
+
+    /**
+     * Create a Neural Network using a NetworkDescriptor. This constructor will create a
+     * NeuralNerwork object containing the topology described by the networkDescriptor.
+     * @param networkDescriptor NetworkDescriptor object
+     */
+    private NeuralNetwork(NetworkDescriptor networkDescriptor) {
+        mLayers = new ArrayList<>();
+        mConnections = new ArrayList<>();
+
+        // TODO: Create Layers according to the NetworkDesciptor.
     }
 
     /**
@@ -89,10 +105,27 @@ public class NeuralNetwork
     }
 
     /**
+     * Remove the output layer. The last hidden layer, if any, will become the new
+     * output layer.
+     */
+    public void removeLayer() {
+        int numLayers = mLayers.size();
+        if (numLayers <= 0) {
+            return;
+        }
+
+        mLayers.remove(numLayers - 1);
+        int numConnections = mConnections.size();
+        if (numConnections > 0) {
+            mConnections.remove(numConnections - 1);
+        }
+    }
+
+    /**
      * Propagate output of layer k-1 through layer k
      * @param k layer index
      */
-    private void propagateLayer(int k) {
+    void propagateLayer(int k) {
         // h := previous layer index
         // k := current layer index
         int h = k - 1;
@@ -156,15 +189,14 @@ public class NeuralNetwork
     /**
      * A layer is a collection of neurons of equal behaviour each of them equally distant from the input layer.
      */
-    private class Layer
+    public class Layer
     {
         private final int size;
         private final Behaviour behaviour;
         private final double [] bias;
         private final double [] output;
 
-
-        public Layer(double[] biases, Behaviour behaviour) {
+        private Layer(double[] biases, Behaviour behaviour) {
             this.size = biases.length;
             this.behaviour = behaviour;
 
@@ -172,12 +204,11 @@ public class NeuralNetwork
             this.output = new double[this.size];
         }
 
-
         /**
          * Propagate input and activate all neurons
          * @param layerInput input vector to the layer after applying connection weights
          */
-        public void propagate(double[] layerInput) {
+        void propagate(double[] layerInput) {
             for (int n = 0; n < size; n++) {
                 output[n] = behaviour.activation(layerInput[n] - bias[n]);
             }

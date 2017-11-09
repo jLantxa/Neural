@@ -16,17 +16,7 @@
 
 package org.jlantxa.neural;
 
-public class TopologyException extends Exception
+public class NetworkTrainer
 {
-    private final String msg;
 
-    TopologyException(String msg) {
-        this.msg = msg;
-    }
-
-    @Override
-    public void printStackTrace() {
-        System.err.println("Topology exception:");
-        System.err.println(msg);
-    }
 }

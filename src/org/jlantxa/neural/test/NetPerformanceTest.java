@@ -25,6 +25,8 @@ import java.util.ArrayList;
 
 public class NetPerformanceTest
 {
+    private static final long NSEC_TO_SEC = 1000000000;
+
     private NetPerformanceTest() {
 
     }
@@ -86,11 +88,11 @@ public class NetPerformanceTest
             }
 
             long executeAvg = 0;
-            for (Long anExecute : execute) {
-                executeAvg += anExecute;
+            for (Long anExecution : execute) {
+                executeAvg += anExecution;
             }
             executeAvg /= execute.size();
-            double throughput = 1 / (executeAvg/1000000000.0);
+            double throughput = 1.0 / (executeAvg/(1.0*NSEC_TO_SEC));
             System.out.println("Avg. throughput: " + throughput + " cycles per second");
 
         } catch (TopologyException te) {
