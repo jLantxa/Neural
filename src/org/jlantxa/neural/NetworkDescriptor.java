@@ -16,6 +16,10 @@
 
 package org.jlantxa.neural;
 
+import org.jlantxa.neural.behaviour.Behaviour;
+import org.jlantxa.neural.behaviour.IdentityFunction;
+import org.jlantxa.neural.behaviour.LogisticFunction;
+
 import java.util.ArrayList;
 
 public class NetworkDescriptor
@@ -106,6 +110,21 @@ public class NetworkDescriptor
         return mConnections;
     }
 
+    /**
+     * Get behaviour descriptor constant from a Behaviour instance
+     * @param behaviour An implementation of the Behaviour interface
+     * @return A constant describing the type of behaviour instance
+     */
+    static NetworkDescriptor.BehaviourType parseBehaviourType(Behaviour behaviour) {
+        if (behaviour instanceof IdentityFunction) {
+            return NetworkDescriptor.BehaviourType.IDENTITY;
+        } else if (behaviour instanceof LogisticFunction) {
+            return NetworkDescriptor.BehaviourType.LOGISTIC;
+        }
+
+        // Return LOGISTIC as default
+        return NetworkDescriptor.BehaviourType.LOGISTIC;
+    }
 
     class LayerDescriptor
     {

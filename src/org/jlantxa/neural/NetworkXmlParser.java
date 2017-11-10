@@ -164,7 +164,7 @@ public class NetworkXmlParser {
         }
 
         if (layerNumTotal != connectionsNumTotal + 1) {
-            throw new TopologyException("The must be one connection matrix for every layer after the input layer");
+            throw new TopologyException("There must be one connection matrix for every layer after the input layer");
         }
 
         // Input layer has no connection matrix
@@ -176,5 +176,13 @@ public class NetworkXmlParser {
 
         // Return the network descriptor if reached this point
         return networkDescriptor;
+    }
+
+    /**
+     * Save a NetworkDescriptor to an XML file
+     * @param networkDescriptor Network descriptor
+     */
+    public static void writeXML(NetworkDescriptor networkDescriptor) {
+
     }
 }

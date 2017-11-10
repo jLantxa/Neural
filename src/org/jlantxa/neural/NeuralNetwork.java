@@ -208,6 +208,28 @@ public class NeuralNetwork
         return mLayers.get(mLayers.size() - 1).size;
     }
 
+    /**
+     * Return a NetworkDescriptor containing the current state of the network
+     * @return NetworkDescriptor for the current state of the network
+     */
+    public NetworkDescriptor getNetworkDescriptor() {
+        NetworkDescriptor descriptor = new NetworkDescriptor();
+
+        // This is unnecessary since this NeuralNetwork object will never have a wrong topology,
+        // however the NetworkDescriptor always checks the topology.
+        try {
+            descriptor.addLayer(mLayers.get(0).biases, null, null);
+            for (int l = 1; l < mLayers.size(); l++) {
+                Behaviour behaviour = mLayers.get(l).getBehaviour();
+                NetworkDescriptor.BehaviourType behaviourType = NetworkDescriptor.parseBehaviourType(behaviour);
+                descriptor.addLayer(mLayers.get(l).biases, behaviourType, mConnections.get(l - 1));
+            }
+        }
+        catch (TopologyException e) {
+            e.printStackTrace();
+        }
+        return descriptor;
+    }
 
     /**
      * A layer is a collection of neurons of equal behaviour each of them equally distant from the input layer.
@@ -216,14 +238,14 @@ public class NeuralNetwork
     {
         private final int size;
         private final Behaviour behaviour;
-        private final double [] bias;
+        private final double [] biases;
         private final double [] output;
 
         private Layer(double[] biases, Behaviour behaviour) {
             this.size = biases.length;
             this.behaviour = behaviour;
 
-            this.bias = biases;
+            this.biases = biases;
             this.output = new double[this.size];
         }
 
@@ -233,7 +255,7 @@ public class NeuralNetwork
          */
         void propagate(double[] layerInput) {
             for (int n = 0; n < size; n++) {
-                output[n] = behaviour.activation(layerInput[n] - bias[n]);
+                output[n] = behaviour.activation(layerInput[n] - biases[n]);
             }
         }
 
@@ -259,7 +281,7 @@ public class NeuralNetwork
          * @return bias of neuron n within the layer
          */
         public double getBias(int n) {
-            return this.bias[n];
+            return this.biases[n];
         }
 
         /**
