@@ -17,16 +17,21 @@
 package org.jlantxa.neural.test;
 
 import org.jlantxa.neural.NetworkDescriptor;
+import org.jlantxa.neural.NetworkXmlParser;
 import org.jlantxa.neural.NeuralNetwork;
 import org.jlantxa.neural.TopologyException;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class NetPerformanceTest
+public class NetworkTest
 {
     private static final long NSEC_TO_SEC = 1000000000;
 
-    private NetPerformanceTest() {
+    private NetworkTest() {
 
     }
 
@@ -36,7 +41,7 @@ public class NetPerformanceTest
      * @param layers Sizes of layers
      * @param bPrintVectors Print input and output vectors
      */
-    public static void execute(int nTests, int[] layers, boolean bPrintVectors) {
+    public static void performanceTest(int nTests, int[] layers, boolean bPrintVectors) {
         long nanoTimer, createNanos;
         ArrayList<Long> execute = new ArrayList<>();
 
@@ -101,7 +106,42 @@ public class NetPerformanceTest
         }
     }
 
-    private static void printVector(double[] vector, String msg) {
+    /**
+     * Execute a cycle of the neural network described in an XML file
+     * @param xmlFile XML file containing the network description
+     * @param input Input vector. If null, a random input vector will be used
+     * @return Network output
+     * @throws TopologyException  TopologyException
+     * @throws ParserConfigurationException ParserConfigurationException
+     * @throws SAXException SAXException
+     * @throws IOException IOException
+     */
+    public static double[] executeNetFromXML(File xmlFile, double[] input)
+            throws TopologyException, IOException, SAXException, ParserConfigurationException
+    {
+        NetworkDescriptor netDescriptor = NetworkXmlParser.getNetworkDescriptor(xmlFile);
+        NeuralNetwork network = new NeuralNetwork(netDescriptor);
+        double[] netInput;
+        double[] output;
+
+        if (input == null) {
+            netInput = new double[network.getInputSize()];
+            for (int i = 0; i < netInput.length; i++) {
+                netInput[i] = Math.random();
+            }
+        } else {
+            netInput = input;
+        }
+
+        output = network.execute(netInput);
+
+        NetworkTest.printVector(netInput, "Input:");
+        NetworkTest.printVector(output, "Output:");
+
+        return output;
+    }
+
+    public static void printVector(double[] vector, String msg) {
         System.out.println(msg);
         for (double element : vector) {
             System.out.println(element);

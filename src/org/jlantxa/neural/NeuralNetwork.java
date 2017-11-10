@@ -27,22 +27,20 @@ public class NeuralNetwork
     /**
      * Layers, including input, hidden and output
      */
-    private final ArrayList<Layer> mLayers;
+    private final ArrayList<Layer> mLayers = new ArrayList<>();
 
     /**
      * Connection matrices
      * The connection matrix is associated with hidden and output layers.
      * Therefore, the connection matrix before layer k has index k-1, i.e. h.
      */
-    private final ArrayList<double[][]> mConnections;
+    private final ArrayList<double[][]> mConnections = new ArrayList<>();
 
     /**
-     * Empty Neural Network constuctor. This creates an empty Neural Network and
-     * initialises its internal Lists. Layers must be added after construction.
+     * Empty Neural Network constructor.
      */
     public NeuralNetwork() {
-        mLayers = new ArrayList<>();
-        mConnections = new ArrayList<>();
+
     }
 
     /**
@@ -51,10 +49,8 @@ public class NeuralNetwork
      * @param networkDescriptor NetworkDescriptor object
      */
     public NeuralNetwork(NetworkDescriptor networkDescriptor) {
-        mLayers = new ArrayList<>();
-
         ArrayList<NetworkDescriptor.LayerDescriptor> layerDescriptors = networkDescriptor.getLayerDescriptors();
-        mConnections = networkDescriptor.getConnectionDescriptors();
+        mConnections.addAll(networkDescriptor.getConnectionDescriptors());
 
         for (NetworkDescriptor.LayerDescriptor layerDescriptor : layerDescriptors) {
             double[] biases = layerDescriptor.biases;
@@ -200,8 +196,16 @@ public class NeuralNetwork
         return mLayers.get(mLayers.size() - 1).output;
     }
 
-    public int getSize() {
+    public int getNumberOfLayers() {
         return mLayers.size();
+    }
+
+    public int getInputSize() {
+        return mLayers.get(0).size;
+    }
+
+    public int getOutputSize() {
+        return mLayers.get(mLayers.size() - 1).size;
     }
 
 
