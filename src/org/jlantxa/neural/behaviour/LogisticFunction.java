@@ -33,7 +33,6 @@ public class LogisticFunction implements Behaviour
         this(1.0);
     }
 
-
     @Override
     public double activation(double x) {
         return 1 / (1 + Math.exp(-x * constant));

@@ -14,12 +14,8 @@
  * limitations under the License.
 */
 
-package org.jlantxa.neural.test;
+package org.jlantxa.neural;
 
-import org.jlantxa.neural.NetworkDescriptor;
-import org.jlantxa.neural.NetworkXmlParser;
-import org.jlantxa.neural.NeuralNetwork;
-import org.jlantxa.neural.TopologyException;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,13 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class NetworkTest
+/**
+ * This class contains simple test functions and utilities for testing
+ */
+abstract class NetworkTest
 {
     private static final long NSEC_TO_SEC = 1000000000;
-
-    private NetworkTest() {
-
-    }
 
     /**
      * Measure average performance of an arbitrary neural network

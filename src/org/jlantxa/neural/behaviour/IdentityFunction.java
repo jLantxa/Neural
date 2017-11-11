@@ -24,7 +24,6 @@ public class IdentityFunction implements Behaviour
     public IdentityFunction() {
     }
 
-
     @Override
     public double activation(double x) {
         return x;

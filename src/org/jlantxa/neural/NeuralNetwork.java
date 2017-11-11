@@ -196,14 +196,26 @@ public class NeuralNetwork
         return mLayers.get(mLayers.size() - 1).output;
     }
 
+    /**
+     * Get number of layers
+     * @return number of layers
+     */
     public int getNumberOfLayers() {
         return mLayers.size();
     }
 
+    /**
+     * Get input size (number of neurons in the input layer)
+     * @return input size
+     */
     public int getInputSize() {
         return mLayers.get(0).size;
     }
 
+    /**
+     * Get output size (number of neurons in the output layer)
+     * @return output size
+     */
     public int getOutputSize() {
         return mLayers.get(mLayers.size() - 1).size;
     }

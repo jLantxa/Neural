@@ -29,7 +29,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class NetworkXmlParser {
+/**
+ * This class provides functions to read and write network topologies from and to XML files
+ */
+public abstract class NetworkXmlParser
+{
     private static final String LAYER_NODE_NAME = "Layer";
     private static final String CONNECTION_NODE_NAME = "Connection";
 
@@ -39,10 +43,6 @@ public class NetworkXmlParser {
     private static final String NEURON_ELEMENT_NAME = "Neuron";
     private static final String NODE_ELEMENT_NAME = "Node";
     private static final String WEIGHT_ELEMENT_NAME = "Weight";
-
-    private NetworkXmlParser() {
-
-    }
 
     /**
      * Get a network descriptor from an XML file

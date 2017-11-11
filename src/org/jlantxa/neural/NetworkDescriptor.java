@@ -22,9 +22,15 @@ import org.jlantxa.neural.behaviour.LogisticFunction;
 
 import java.util.ArrayList;
 
+/**
+ * A NetworkDescriptor describes the topology of a NeuralNetwork
+ */
 public class NetworkDescriptor
 {
-    public enum BehaviourType {
+    /**
+     * Activation functions. This enum contains simple representations of the activation function classes
+     */
+    enum BehaviourType {
         IDENTITY,
         LOGISTIC
     }
@@ -32,6 +38,9 @@ public class NetworkDescriptor
     final ArrayList<LayerDescriptor> mLayers;
     final ArrayList<double[][]> mConnections;
 
+    /**
+     * Create an empty NetworkDescriptor. Layers must be added sequentially.
+     */
     public NetworkDescriptor() {
         mLayers = new ArrayList<>();
         mConnections = new ArrayList<>();
@@ -102,11 +111,19 @@ public class NetworkDescriptor
         }
     }
 
-    public ArrayList<LayerDescriptor> getLayerDescriptors() {
+    /**
+     * Get an ArrayList of all layer descriptors in this NetworkDescriptor
+     * @return ArrayList of LayerDescriptors
+     */
+    ArrayList<LayerDescriptor> getLayerDescriptors() {
         return mLayers;
     }
 
-    public ArrayList<double[][]> getConnectionDescriptors() {
+    /**
+     * Get an ArrayList of all connection matrices in this NetworkDescriptor
+     * @return ArrayList of connection matrices
+     */
+    ArrayList<double[][]> getConnectionDescriptors() {
         return mConnections;
     }
 
@@ -126,6 +143,10 @@ public class NetworkDescriptor
         return NetworkDescriptor.BehaviourType.LOGISTIC;
     }
 
+    /**
+     * A LayerDescriptor is a simple representation of a network layer. It contains the biases of all neurons
+     * and the behaviour type of the layer.
+     */
     class LayerDescriptor
     {
         final double[] biases;
