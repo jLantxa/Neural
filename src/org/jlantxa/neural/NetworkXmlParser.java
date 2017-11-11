@@ -16,15 +16,16 @@
 
 package org.jlantxa.neural;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,8 +33,8 @@ import java.util.ArrayList;
 /**
  * This class provides functions to read and write network topologies from and to XML files
  */
-public abstract class NetworkXmlParser
-{
+public abstract class NetworkXmlParser {
+    private static final String NEURAL_NETWORK_ROOT_ELEMENT = "NeuralNetwork";
     private static final String LAYER_NODE_NAME = "Layer";
     private static final String CONNECTION_NODE_NAME = "Connection";
 
@@ -46,16 +47,16 @@ public abstract class NetworkXmlParser
 
     /**
      * Get a network descriptor from an XML file
+     *
      * @param xmlFile XML file containing the network description
      * @return NetworkDescriptor object which describes the network topology
      * @throws ParserConfigurationException ParserConfigurationException
-     * @throws IOException IOException
-     * @throws SAXException SAXException
-     * @throws TopologyException TopologyException
+     * @throws IOException                  IOException
+     * @throws SAXException                 SAXException
+     * @throws TopologyException            TopologyException
      */
     public static NetworkDescriptor getNetworkDescriptor(File xmlFile)
-            throws ParserConfigurationException, IOException, SAXException, TopologyException
-    {
+            throws ParserConfigurationException, IOException, SAXException, TopologyException {
         NetworkDescriptor networkDescriptor = new NetworkDescriptor();
         ArrayList<double[]> layerBiases = new ArrayList<>();
         ArrayList<NetworkDescriptor.BehaviourType> behaviours = new ArrayList<>();
@@ -180,9 +181,67 @@ public abstract class NetworkXmlParser
 
     /**
      * Save a NetworkDescriptor to an XML file
+     *
      * @param networkDescriptor Network descriptor
      */
-    public static void writeXML(NetworkDescriptor networkDescriptor) {
+    public static void writeXML(NetworkDescriptor networkDescriptor, File xmlFile) {
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.newDocument();
 
+            // NeuralNetwork element
+            Element neuralNetworkElement = doc.createElement(NEURAL_NETWORK_ROOT_ELEMENT);
+            doc.appendChild(neuralNetworkElement);
+
+            // Layers
+            for (NetworkDescriptor.LayerDescriptor layerDescriptor : networkDescriptor.getLayerDescriptors()) {
+                Element layerElement = doc.createElement(LAYER_NODE_NAME);
+                neuralNetworkElement.appendChild(layerElement);
+
+                NetworkDescriptor.BehaviourType behaviourType = layerDescriptor.behaviourType;
+                Attr attr = doc.createAttribute("behaviour");
+                attr.setValue(NetworkDescriptor.getBehaviourTypeAsAttribute(behaviourType));
+                layerElement.setAttributeNode(attr);
+
+                for (double bias : layerDescriptor.biases) {
+                    Element neuronElement = doc.createElement(NEURON_ELEMENT_NAME);
+                    neuronElement.appendChild(doc.createTextNode(String.valueOf(bias)));
+                    layerElement.appendChild(neuronElement);
+                }
+            }
+
+            // Connections
+            for (double[][] connectionMatrix : networkDescriptor.getConnectionDescriptors()) {
+                Element connectionElement = doc.createElement(CONNECTION_NODE_NAME);
+                neuralNetworkElement.appendChild(connectionElement);
+
+                // Nodes
+                for (double[] synapseList : connectionMatrix) {
+                    Element nodeElement = doc.createElement(NODE_ELEMENT_NAME);
+                    connectionElement.appendChild(nodeElement);
+
+                    // Weights
+                    for (double weight : synapseList) {
+                        Element weightElement = doc.createElement(WEIGHT_ELEMENT_NAME);
+                        weightElement.appendChild(doc.createTextNode(String.valueOf(weight)));
+                        nodeElement.appendChild(weightElement);
+                    }
+                }
+            }
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(xmlFile);
+            transformer.transform(source, result);
+
+            // Output to console for testing
+            StreamResult consoleResult = new StreamResult(System.out);
+            transformer.transform(source, consoleResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

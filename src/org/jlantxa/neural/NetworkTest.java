@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * This class contains simple test functions and utilities for testing
  */
-abstract class NetworkTest
+public abstract class NetworkTest
 {
     private static final long NSEC_TO_SEC = 1000000000;
 

@@ -143,6 +143,17 @@ public class NetworkDescriptor
         return NetworkDescriptor.BehaviourType.LOGISTIC;
     }
 
+    static String getBehaviourTypeAsAttribute(BehaviourType type) {
+       switch (type) {
+           case IDENTITY:
+               return "identity";
+
+           case LOGISTIC:
+           default:
+               return "logistic";
+       }
+    }
+
     /**
      * A LayerDescriptor is a simple representation of a network layer. It contains the biases of all neurons
      * and the behaviour type of the layer.
