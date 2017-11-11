@@ -33,15 +33,16 @@ import java.util.ArrayList;
 /**
  * This class provides functions to read and write network topologies from and to XML files
  */
-public abstract class NetworkXmlParser {
+public abstract class NetworkXmlParser
+{
     private static final String NEURAL_NETWORK_ROOT_ELEMENT = "NeuralNetwork";
-    private static final String LAYER_NODE_NAME = "Layer";
-    private static final String CONNECTION_NODE_NAME = "Connection";
 
+    private static final String LAYER_NODE_NAME = "Layer";
     private static final String LAYER_NAME_ATTRIBUTE = "name";
     private static final String LAYER_BEHAVIOUR_ATTRIBUTE = "behaviour";
-
     private static final String NEURON_ELEMENT_NAME = "Neuron";
+
+    private static final String CONNECTION_NODE_NAME = "Connection";
     private static final String NODE_ELEMENT_NAME = "Node";
     private static final String WEIGHT_ELEMENT_NAME = "Weight";
 
@@ -78,17 +79,7 @@ public abstract class NetworkXmlParser {
                 String name = ((Element) layerNode).getAttribute(LAYER_NAME_ATTRIBUTE);
                 String behaviourString = ((Element) layerNode).getAttribute(LAYER_BEHAVIOUR_ATTRIBUTE);
 
-                NetworkDescriptor.BehaviourType behaviour;
-                switch (behaviourString) {
-                    case "identity":
-                        behaviour = NetworkDescriptor.BehaviourType.IDENTITY;
-                        break;
-
-                    case "logistic":
-                    default:
-                        behaviour = NetworkDescriptor.BehaviourType.LOGISTIC;
-                        break;
-                }
+                NetworkDescriptor.BehaviourType behaviour = getBehaviourTypeFromAttribute(behaviourString);
 
                 NodeList neuronList = ((Element) layerNode).getElementsByTagName(NEURON_ELEMENT_NAME);
 
@@ -201,7 +192,7 @@ public abstract class NetworkXmlParser {
 
                 NetworkDescriptor.BehaviourType behaviourType = layerDescriptor.behaviourType;
                 Attr attr = doc.createAttribute("behaviour");
-                attr.setValue(NetworkDescriptor.getBehaviourTypeAsAttribute(behaviourType));
+                attr.setValue(getBehaviourAttributeFromType(behaviourType));
                 layerElement.setAttributeNode(attr);
 
                 for (double bias : layerDescriptor.biases) {
@@ -230,7 +221,7 @@ public abstract class NetworkXmlParser {
                 }
             }
 
-            // write the content into xml file
+            // Write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
@@ -242,6 +233,28 @@ public abstract class NetworkXmlParser {
             transformer.transform(source, consoleResult);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static String getBehaviourAttributeFromType(NetworkDescriptor.BehaviourType type) {
+        switch (type) {
+            case IDENTITY:
+                return "identity";
+
+            case LOGISTIC:
+            default:
+                return "logistic";
+        }
+    }
+
+    private static NetworkDescriptor.BehaviourType getBehaviourTypeFromAttribute(String attribute) {
+        switch (attribute) {
+            case "identity":
+                return NetworkDescriptor.BehaviourType.IDENTITY;
+
+            case "logistic":
+            default:
+                return NetworkDescriptor.BehaviourType.LOGISTIC;
         }
     }
 }
