@@ -174,6 +174,7 @@ public abstract class NetworkXmlParser
      * Save a NetworkDescriptor to an XML file
      *
      * @param networkDescriptor Network descriptor
+     * @param xmlFile Output file
      */
     public static void writeXML(NetworkDescriptor networkDescriptor, File xmlFile) {
         try {
