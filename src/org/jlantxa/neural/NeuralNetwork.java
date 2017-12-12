@@ -43,6 +43,27 @@ public class NeuralNetwork
 
     }
 
+    // TODO: Randomise weights and bias
+    NeuralNetwork(int[] layerSizes) throws TopologyException {
+        if (layerSizes == null) throw new TopologyException("Sizes vector is null");
+        if (layerSizes.length == 0) return;
+
+        try {
+            addLayer(new double[layerSizes[0]], new IdentityFunction(), null);
+        } catch (TopologyException e) {
+            e.printStackTrace();
+        }
+
+        for (int l = 1; l < layerSizes.length; l++) {
+            int k = layerSizes[l-1];
+            int h = layerSizes[l];
+            double[][] weights = new double[k][h];
+            double[] bias = new double[h];
+
+            addLayer(bias, new LogisticFunction(), weights);
+        }
+    }
+
     /**
      * Create a Neural Network using a NetworkDescriptor. This constructor will create a
      * NeuralNerwork object containing the topology described by the networkDescriptor.

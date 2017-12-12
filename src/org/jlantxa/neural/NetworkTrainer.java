@@ -16,7 +16,13 @@
 
 package org.jlantxa.neural;
 
-class NetworkTrainer
+public class NetworkTrainer
 {
-    
+    private final NeuralNetwork mNetwork;
+    private final double mLearningRate;
+
+    public NetworkTrainer(NeuralNetwork net, double etta) {
+        mNetwork = net;
+        mLearningRate = etta;
+    }
 }
