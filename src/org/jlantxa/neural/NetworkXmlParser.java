@@ -171,6 +171,21 @@ public abstract class NetworkXmlParser
     }
 
     /**
+     * Get a NeuralNetwork instance from an XML file
+     *
+     * @param xmlFile XML file containing the network description
+     * @return NetworkDescriptor object which describes the network topology
+     * @throws ParserConfigurationException ParserConfigurationException
+     * @throws IOException                  IOException
+     * @throws SAXException                 SAXException
+     * @throws TopologyException            TopologyException
+     */
+    public static NeuralNetwork getNetwork(File xmlFile)
+            throws ParserConfigurationException, IOException, SAXException, TopologyException {
+        return new NeuralNetwork(getNetworkDescriptor(xmlFile));
+    }
+
+    /**
      * Save a NetworkDescriptor to an XML file
      *
      * @param networkDescriptor Network descriptor
