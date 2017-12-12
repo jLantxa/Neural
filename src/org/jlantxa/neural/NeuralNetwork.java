@@ -78,7 +78,7 @@ public class NeuralNetwork
      * @throws TopologyException Throws TopologyException when the new layer does not match with
      * the previous layer and/or connection matrix.
      */
-    void addLayer(double[] biases, Behaviour behaviour, double[][] connections) throws TopologyException
+    public void addLayer(double[] biases, Behaviour behaviour, double[][] connections) throws TopologyException
     {
         if (biases == null || behaviour == null) {
             throw new TopologyException("Bias and/or behaviour objects are null.");

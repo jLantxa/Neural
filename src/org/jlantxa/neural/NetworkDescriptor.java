@@ -54,7 +54,7 @@ public class NetworkDescriptor
      * @throws TopologyException Throws TopologyException when the new layer does not match with
      * the previous layer and/or connection matrix.
      */
-    public void addLayer(double[] biases, BehaviourType behaviour, double[][] connections) throws TopologyException
+    void addLayer(double[] biases, BehaviourType behaviour, double[][] connections) throws TopologyException
     {
         if (biases == null || behaviour == null) {
             throw new TopologyException("Bias and/or behaviour objects are null.");
@@ -98,7 +98,7 @@ public class NetworkDescriptor
     /**
      * Remove the last layer from the descriptor
      */
-    public void removeLayer() {
+    void removeLayer() {
         int numLayers = mLayers.size();
         if (numLayers <= 0) {
             return;

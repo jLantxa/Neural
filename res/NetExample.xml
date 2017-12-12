@@ -1,4 +1,5 @@
 <?xml version = "1.0"?>
+
 <NeuralNetwork>
     <Layer name="layer0" behaviour="identity">
         <Neuron>0.0</Neuron>
