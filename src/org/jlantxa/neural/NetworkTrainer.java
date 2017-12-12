@@ -16,13 +16,92 @@
 
 package org.jlantxa.neural;
 
+import java.util.ArrayList;
+
 public class NetworkTrainer
 {
     private final NeuralNetwork mNetwork;
-    private final double mLearningRate;
 
-    public NetworkTrainer(NeuralNetwork net, double etta) {
+    // Learning parameters
+    private final double mLearningRate;
+    private final double mMomentum;
+
+    private double mNetError;
+
+    private double[] mTeachingInput;
+    private double[] mTeachingOutput;
+
+    /* The indexing of these vector considers index 0 as the first hidden layer,
+     * as the input layer does not have to be trained
+    */
+    private final ArrayList<double[]> mDelta;
+    private final ArrayList<double[]> mWeightDelta;
+
+    public NetworkTrainer(NeuralNetwork net, double etta, double momentum) {
         mNetwork = net;
         mLearningRate = etta;
+        mMomentum = momentum;
+
+        int numLayers = net.getNumberOfLayers();
+
+        mNetError = 0.0;
+
+        mTeachingOutput = new double[net.getInputSize()];
+        mTeachingOutput = new double[net.getOutputSize()];
+
+        mDelta = new ArrayList<>(numLayers-1);
+        mWeightDelta = new ArrayList<>(numLayers-1);
+
+        for (int l = 1; l < numLayers; l++) {
+            NeuralNetwork.Layer layer = net.mLayers.get(l);
+            mDelta.add(new double[layer.getSize()]);
+            mWeightDelta.add(new double[layer.getSize()]);
+        }
+    }
+
+    public void inputTeachingData(double[] in, double[] out) {
+        mTeachingInput = in;
+        mTeachingOutput = out;
+    }
+
+    private void propagateNet() {
+        mNetwork.execute(mTeachingInput);
+    }
+
+    private void backPropagateNet() {
+        // TODO
+    }
+
+    private void update() {
+        propagateNet();
+        updateError();
+        backPropagateNet();
+
+        // TODO
+    }
+
+    private void updateError() {
+        double[] out = mNetwork.getOutput();
+        double err = 0;
+        for (int o = 0; o < mNetwork.getOutputSize(); o++) {
+            err += Math.pow(mTeachingOutput[o] - out[o], 2);
+        }
+        mNetError = 0.5 * err;
+    }
+
+    public void propagateForward(double[] input) {
+        mNetwork.execute(input);
+    }
+
+    public double getLearningRate() {
+        return mLearningRate;
+    }
+
+    public double getMomentum() {
+        return mMomentum;
+    }
+
+    public double getNetError() {
+        return mNetError;
     }
 }

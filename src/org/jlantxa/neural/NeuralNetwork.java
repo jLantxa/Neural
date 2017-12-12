@@ -16,6 +16,7 @@
 
 package org.jlantxa.neural;
 
+import org.jetbrains.annotations.Contract;
 import org.jlantxa.neural.behaviour.Behaviour;
 import org.jlantxa.neural.behaviour.IdentityFunction;
 import org.jlantxa.neural.behaviour.LogisticFunction;
@@ -27,14 +28,14 @@ public class NeuralNetwork
     /**
      * Layers, including input, hidden and output
      */
-    private final ArrayList<Layer> mLayers = new ArrayList<>();
+    final ArrayList<Layer> mLayers = new ArrayList<>();
 
     /**
      * Connection matrices
      * The connection matrix is associated with hidden and output layers.
      * Therefore, the connection matrix before layer k has index k-1, i.e. h.
      */
-    private final ArrayList<double[][]> mConnections = new ArrayList<>();
+    final ArrayList<double[][]> mConnections = new ArrayList<>();
 
     /**
      * Empty Neural Network constructor.
@@ -43,22 +44,44 @@ public class NeuralNetwork
 
     }
 
-    // TODO: Randomise weights and bias
-    NeuralNetwork(int[] layerSizes) throws TopologyException {
+    @Contract("null -> fail")
+    public NeuralNetwork(int[] layerSizes) throws TopologyException {
         if (layerSizes == null) throw new TopologyException("Sizes vector is null");
         if (layerSizes.length == 0) return;
 
+        double[] bias;
+        double[][] weights;
+
         try {
-            addLayer(new double[layerSizes[0]], new IdentityFunction(), null);
+            bias = new double[layerSizes[0]];
+
+            // Random input bias
+            for (int b = 0; b < bias.length; b++) {
+                bias[b] = Math.random();
+            }
+
+            addLayer(bias, new IdentityFunction(), null);
         } catch (TopologyException e) {
             e.printStackTrace();
         }
 
         for (int l = 1; l < layerSizes.length; l++) {
-            int k = layerSizes[l-1];
-            int h = layerSizes[l];
-            double[][] weights = new double[k][h];
-            double[] bias = new double[h];
+            int size_k = layerSizes[l-1];
+            int size_h = layerSizes[l];
+            weights = new double[size_k][size_h];
+            bias = new double[size_h];
+
+            // Random bias
+            for (int b = 0; b < bias.length; b++) {
+                bias[b] = Math.random();
+            }
+
+            // Random weights
+            for (int k = 0; k < size_k; k++) {
+                for (int h = 0; h < size_h; h++) {
+                    weights[k][h] = Math.random();
+                }
+            }
 
             addLayer(bias, new LogisticFunction(), weights);
         }
